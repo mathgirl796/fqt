@@ -11,10 +11,10 @@
 
 /**
  * @param file_path fastq file path
- * @param output_dir output files dir, not ends with '/'
+ * @param output_dir output files dir
  * @param buf_size buffer size for each base in a read
  * 
- * @return FQT_ERRNO
+ * @return 0
  */
 int fqt(char *file_path, char *output_dir, int buf_size);
 
