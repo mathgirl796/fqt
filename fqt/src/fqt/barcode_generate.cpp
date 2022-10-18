@@ -1,4 +1,5 @@
 #include "barcode_generate.hpp"
+#include <ctime>
 extern "C" {
 	#include "../clib/utils.h"
 }
@@ -20,6 +21,7 @@ int barcode_simulate(char** input_dirs, char* output_dir, int buf_size, int lrea
 	gzFile sf[nsample];
 	gzFile qf[nsample];
 	gzFile sf_out, qf_out;
+	clock_t t = clock();
 
 	// get nreads
 	int seq_num = 0;
@@ -53,6 +55,8 @@ int barcode_simulate(char** input_dirs, char* output_dir, int buf_size, int lrea
 	}
 	if (buf_bc.size() > 0) err_gzwrite(bf, buf_bc.data(), buf_bc.size() * sizeof(uint16_t));
 	err_gzclose(bf);
+	fprintf(stderr, "generated barcode.bin.gz, using %.2f sec\n", (float)(clock() - t) / CLOCKS_PER_SEC);
+	t = clock();
 
 	// generate concat files
 	for (int i = 0; i < nsample; ++i) {
@@ -104,7 +108,9 @@ int barcode_simulate(char** input_dirs, char* output_dir, int buf_size, int lrea
 			err_gzclose(sf[j]);
 			err_gzclose(qf[j]);
 		}
+		fprintf(stderr, "processed cycle %d, using %.2f sec\r", i, (float)(clock() - t) / CLOCKS_PER_SEC);
 	}
+	fprintf(stderr, "\n");
 	for (int i = 0; i < nsample; ++i) {
 		free(sbuf_r[i]);
 		free(qbuf_r[i]);
