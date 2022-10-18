@@ -35,15 +35,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\fqt\fqt.c" />
+    <ClCompile Include="src\fqt\fastq_transpose.cpp" />
     <ClCompile Include="src\clib\utils.c" />
-    <ClCompile Include="src\main.c" />
+    <ClCompile Include="src\fqt\barcode_generate.cpp" />
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\clib\desc.h" />
-    <ClInclude Include="src\fqt\fqt.h" />
+    <ClInclude Include="src\fqt\fastq_transpose.hpp" />
     <ClInclude Include="src\clib\utils.h" />
-    <ClInclude Include="src\CPPLIB\get_option_cpp.hpp" />
+    <ClInclude Include="src\fqt\barcode_generate.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{463c2026-3137-4cb8-9d29-7b19e7da38b5}</ProjectGuid>
@@ -70,6 +71,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>WSL_1_0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
