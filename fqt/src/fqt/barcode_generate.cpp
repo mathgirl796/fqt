@@ -115,4 +115,6 @@ int barcode_simulate(char** input_dirs, char* output_dir, int buf_size, int lrea
 		free(sbuf_r[i]);
 		free(qbuf_r[i]);
 	}
+
+	return 0;
 }

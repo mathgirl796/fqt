@@ -59,8 +59,18 @@ int concat_main(int argc, char** argv) {
 			return 1;
 		}
 	}
+	int num_sample = argc - optind;
+	fprintf(stderr, "concat %d samples...", num_sample);
 
 	return barcode_simulate(argv+optind, output_dir, buf_size, lreads, argc-optind);
+}
+
+void usage() {
+	printf("fqt transpose -b buffer_size -o output_dir [fa/fa.gz]\n");
+	printf("fqt concat -b buffer_size -o output_dir -r read_length [some fqt transpose output_dir]\n");
+	printf("\n");
+	printf("note: buffer_size is for each base in a read in fqt transpose, and for each input file of one cycle in fqt concat\n");
+	printf("note: fqt won't mkdir by itself, please make output_dir manually\n");
 }
 
 int main(int argc, char **argv)
@@ -70,7 +80,7 @@ int main(int argc, char **argv)
 	else if (strcmp(argv[1], "transpose") == 0) return transpose_main(argc - 1, argv + 1);
 	else if (strcmp(argv[1], "concat") == 0) return concat_main(argc - 1, argv + 1);
 
-	printf("command error\n");
+	usage();
 
 	return 0;
 }
