@@ -119,31 +119,42 @@ int barcode_simulate(char** input_dirs, char* output_dir, int buf_size, int lrea
 	return 0;
 }
 
-int barcode_view(char* input_dir, int start, int end) {
+int barcode_view(char* input_dir, int start, int end, int num_int_in_a_line) {
 	char fn[1024];
-	int seq_num;
+	int seq_num; // unused
+	int barcode_num;
 	FILE* f;
+	gzFile gf;
 	uint16_t *barcodes;
 
 	// get meta information
 	sprintf(fn, "%s/meta.txt", input_dir);
 	f = fopen(fn, "r");
-	err_fprintf(f, "%d", seq_num);
+	fscanf(f, "%d", &seq_num);
 	err_fclose(f);
 
-	// read barcodes in the givin region
+	// read barcodes in the given region
 	start = start > 0 ? start : 0;
 	end = end < seq_num ? end : seq_num;
+	barcode_num = end - start;
 	sprintf(fn, "%s/barcode.bin.gz", input_dir);
-	f = fopen(fn, "rb");
-	err_fseek(f, start * sizeof(uint16_t), SEEK_SET);
-	barcodes = (uint16_t*)malloc(sizeof(uint16_t) * (end - start));
-	err_fread_noeof(barcodes, sizeof(uint16_t), end - start, f);
-	err_fclose(f);
+	gf = gzopen(fn, "rb");
+	gzseek(gf, start * sizeof(uint16_t), SEEK_SET);
+	barcodes = (uint16_t*)malloc(sizeof(uint16_t) * barcode_num);
+	err_gzread(gf, barcodes, barcode_num * sizeof(uint16_t));
+	err_gzclose(gf);
 
-	// print selectied barcodes
-
+	// print selected barcodes
+	for (int i = 0; i < barcode_num; ++i) {
+		if (i > 0 && i % num_int_in_a_line == 0) {
+			fprintf(stdout, "\n");
+		}
+		fprintf(stdout, "%d\t", barcodes[i]);
+	}
+	fprintf(stdout, "\n");
 
 	// free resources
 	free(barcodes);
+
+	return 0;
 }

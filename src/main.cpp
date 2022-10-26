@@ -50,6 +50,7 @@ int concat_main(int argc, char** argv) {
 			break;
 		case 'r':
 			lreads = atoi(optarg);
+			break;
 		case 'o':
 			strcpy(output_dir, optarg);
 			len = strlen(output_dir);
@@ -65,9 +66,16 @@ int concat_main(int argc, char** argv) {
 	return barcode_simulate(argv+optind, output_dir, buf_size, lreads, argc-optind);
 }
 
+int viewbc_main(int argc, char **argv) {
+	int start = atoi(strtok(argv[1], "-"));
+	int end = atoi(strtok(NULL, "-"));
+	return barcode_view(argv[2], start, end, 10);
+}
+
 void usage() {
 	printf("fqt transpose -b buffer_size(default 1M) -o output_dir [fa/fa.gz]\n");
 	printf("fqt concat -b buffer_size(default 1M) -o output_dir -r read_length [\"fqt transpose\" output_dirs]\n");
+	printf("fqt viewbc 0-20 [\"fqt concat\" output_dir] // Left closed right open interval");
 	printf("\n");
 }
 
@@ -77,6 +85,7 @@ int main(int argc, char **argv)
 	if (argc <= 1);
 	else if (strcmp(argv[1], "transpose") == 0) return transpose_main(argc - 1, argv + 1);
 	else if (strcmp(argv[1], "concat") == 0) return concat_main(argc - 1, argv + 1);
+	else if (strcmp(argv[1], "viewbc") == 0) return viewbc_main(argc - 1, argv + 1);
 
 	usage();
 

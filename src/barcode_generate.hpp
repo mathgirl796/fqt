@@ -39,4 +39,4 @@ public:
 
 
 int barcode_simulate(char** input_dirs, char* output_dir, int buf_size, int lread, int nsample);
-int barcode_view(char* input_dir, int start, int end);
+int barcode_view(char* input_dir, int start, int end, int num_int_in_a_line);
