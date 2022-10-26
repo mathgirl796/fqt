@@ -36,7 +36,7 @@ int barcode_simulate(char** input_dirs, char* output_dir, int buf_size, int lrea
 	// get choicer
 	Choicer choicer(nsample, nreads);
 
-	// write meta infomation
+	// write meta information
 	sprintf(fn, "%s/meta.txt", output_dir);
 	FILE* f = fopen(fn, "w");
 	err_fprintf(f, "%d", seq_num);
@@ -48,7 +48,7 @@ int barcode_simulate(char** input_dirs, char* output_dir, int buf_size, int lrea
 	choicer.reset();
 	while ((choice = choicer.next()) >= 0) {
 		buf_bc.emplace_back(choice);
-		if (buf_bc.size() * sizeof(uint16_t) >= buf_size) {
+		if (buf_bc.size() * sizeof(uint16_t) >= (size_t)buf_size) {
 			err_gzwrite(bf, buf_bc.data(), buf_bc.size() * sizeof(uint16_t));
 			buf_bc.clear();
 		}
@@ -91,7 +91,7 @@ int barcode_simulate(char** input_dirs, char* output_dir, int buf_size, int lrea
 			}
 			sbuf_w.emplace_back(sbuf_r[choice][idx[choice]]);
 			qbuf_w.emplace_back(qbuf_r[choice][idx[choice]]);
-			if (sbuf_w.size() == buf_size) {
+			if (sbuf_w.size() == (size_t)buf_size) {
 				err_gzwrite(sf_out, sbuf_w.data(), sbuf_w.size()); sbuf_w.clear();
 				err_gzwrite(qf_out, qbuf_w.data(), qbuf_w.size()); qbuf_w.clear();
 			}
@@ -117,4 +117,33 @@ int barcode_simulate(char** input_dirs, char* output_dir, int buf_size, int lrea
 	}
 
 	return 0;
+}
+
+int barcode_view(char* input_dir, int start, int end) {
+	char fn[1024];
+	int seq_num;
+	FILE* f;
+	uint16_t *barcodes;
+
+	// get meta information
+	sprintf(fn, "%s/meta.txt", input_dir);
+	f = fopen(fn, "r");
+	err_fprintf(f, "%d", seq_num);
+	err_fclose(f);
+
+	// read barcodes in the givin region
+	start = start > 0 ? start : 0;
+	end = end < seq_num ? end : seq_num;
+	sprintf(fn, "%s/barcode.bin.gz", input_dir);
+	f = fopen(fn, "rb");
+	err_fseek(f, start * sizeof(uint16_t), SEEK_SET);
+	barcodes = (uint16_t*)malloc(sizeof(uint16_t) * (end - start));
+	err_fread_noeof(barcodes, sizeof(uint16_t), end - start, f);
+	err_fclose(f);
+
+	// print selectied barcodes
+
+
+	// free resources
+	free(barcodes);
 }

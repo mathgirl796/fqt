@@ -18,6 +18,9 @@
 #include "utils.h"
 #define pair64_lt(a, b) ((a).x < (b).x || ((a).x == (b).x && (a).y < (b).y))
 
+int kputs(const char *p, kstring_t *s);
+int kputc(int c, kstring_t *s);
+
 /********************
  * System utilities *
  ********************/

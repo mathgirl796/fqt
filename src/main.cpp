@@ -66,11 +66,9 @@ int concat_main(int argc, char** argv) {
 }
 
 void usage() {
-	printf("fqt transpose -b buffer_size -o output_dir [fa/fa.gz]\n");
-	printf("fqt concat -b buffer_size -o output_dir -r read_length [some fqt transpose output_dir]\n");
+	printf("fqt transpose -b buffer_size(default 1M) -o output_dir [fa/fa.gz]\n");
+	printf("fqt concat -b buffer_size(default 1M) -o output_dir -r read_length [\"fqt transpose\" output_dirs]\n");
 	printf("\n");
-	printf("note: buffer_size is for each base in a read in fqt transpose, and for each input file of one cycle in fqt concat\n");
-	printf("note: fqt won't mkdir by itself, please make output_dir manually\n");
 }
 
 int main(int argc, char **argv)

@@ -95,8 +95,8 @@ int fastq_transpose(char *file_path, char *output_dir, int buf_size)
     {
         free(s_bufs[i]);
         free(q_bufs[i]);
-        int s_errno = gzclose(s_ofs[i]);
-        int q_errno = gzclose(q_ofs[i]);
+        gzclose(s_ofs[i]);
+        gzclose(q_ofs[i]);
     }
     free(s_bufs);
     free(q_bufs);
