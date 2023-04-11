@@ -24,9 +24,9 @@ static inline void fqt_transpose(const char *file_path, const char *output_dir, 
     for (int i = 0; i < read_len; ++i)
     {
         sprintf(fn, "%s/S_%03d.bin.gz", output_dir, i);
-        bout_seq[i] = bopen(fn, B_WRITE, buf_size);
+        bout_seq[i] = bopen(fn, BZ_WRITE, buf_size);
         sprintf(fn, "%s/Q_%03d.bin.gz", output_dir, i);
-        bout_qual[i] = bopen(fn, B_WRITE, buf_size);
+        bout_qual[i] = bopen(fn, BZ_WRITE, buf_size);
     }
 
     clock_t t = clock();
@@ -58,7 +58,7 @@ static inline void fqt_transpose(const char *file_path, const char *output_dir, 
     fprintf(stderr, "Generated %s.\n", fn);
 
     sprintf(fn, "%s/barcode.bin.gz", output_dir);
-    bfile barcode_file = bopen(fn, B_WRITE, buf_size);
+    bfile barcode_file = bopen(fn, BZ_WRITE, buf_size);
     for (int i = 0; i < read_len * 2; ++i)
     {
         bputc(0, barcode_file);
@@ -106,12 +106,12 @@ static inline void fqt_concat(std::vector<std::string> input_dirs, const char *o
             bin_qual[i][j] = bopen(fn, B_READ, buf_size);
         }
         sprintf(fn, "%s/S_%03d.bin.gz", output_dir, i);
-        bout_seq[i] = bopen(fn, B_WRITE, buf_size);
+        bout_seq[i] = bopen(fn, BZ_WRITE, buf_size);
         sprintf(fn, "%s/Q_%03d.bin.gz", output_dir, i);
-        bout_qual[i] = bopen(fn, B_WRITE, buf_size);
+        bout_qual[i] = bopen(fn, BZ_WRITE, buf_size);
     }
     sprintf(fn, "%s/%s", output_dir, "barcode.bin.gz");
-    bout_bc = bopen(fn, B_WRITE, buf_size);
+    bout_bc = bopen(fn, BZ_WRITE, buf_size);
     Choicer choicer(nsample, nreads);
     uint16_t choice;
     clock_t t = clock();
