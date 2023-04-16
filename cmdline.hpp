@@ -807,3 +807,87 @@ private:
 };
 
 } // cmdline
+
+
+
+
+
+/**
+ * for second level command
+*/
+
+struct SECOND_LEVEL_FUNC{
+
+	SECOND_LEVEL_FUNC(const char * command_, const char * help_msg_, int (*run_method_) (int argc, char *argv[])){
+		command.clear();
+		command.append(command_);
+		help_msg.clear();
+
+		if(command.size() < 20){
+			for(uint32_t i = 0; i < 20 - command.size(); i++)
+				help_msg.append(" ");
+		}
+
+		help_msg.append(help_msg_);
+		help_msg.append("\n");
+		run_method = run_method_;
+	}
+
+	void add_help_msg(const char * help_msg_){
+		for(uint32_t i = 0; i < 28 ; i++)
+			help_msg.append(" ");
+		help_msg.append("- ");
+		help_msg.append(help_msg_);
+		help_msg.append("\n");
+	}
+
+	std::string command;
+	std::string help_msg;
+	int (*run_method) (int argc, char *argv[]);
+};
+
+struct COMMAND_HANDLER{
+	std::vector<SECOND_LEVEL_FUNC> f_l;//function list
+	std::string main_command_name;
+	char *PACKAGE_NAME;
+
+	void add_function(const char * command_, const char * help_msg_, int (*run_method_) (int argc, char *argv[])){
+		f_l.emplace_back(command_, help_msg_, run_method_);
+	}
+	void add_help_msg_back(const char * help_msg_){
+		f_l.back().add_help_msg(help_msg_);
+	}
+
+	void set_main_command(const char * main_command_name_){
+		main_command_name.append(main_command_name_);
+	}
+
+	int usage()
+	{
+		fprintf(stderr, "Usage:		%s %s <command> [options]\n", PACKAGE_NAME, main_command_name.c_str());
+		fprintf(stderr, "Command list: \n");
+		for(auto & f: f_l)
+			fprintf(stderr, "        %s%s", f.command.c_str(), f.help_msg.c_str());
+		fprintf(stderr, "        --help	            show this message\n");
+
+		return 1;
+	}
+
+	int run(int argc, char *argv[]){
+		PACKAGE_NAME = argv[0];
+		if (argc < 2)	return usage();
+		bool successful_run = false;
+		for(auto & f: f_l){ if(strcmp(argv[1], f.command.c_str()) == 0)	{ f.run_method(argc - 1, argv + 1); successful_run = true;}}
+		if(strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0){
+			return usage();
+		}
+		if(!successful_run){
+			fprintf(stderr, "[Waring!!!] wrong command: '%s'\n", argv[1]);
+			return usage();
+		}
+		return 0;
+
+	}
+
+};
+

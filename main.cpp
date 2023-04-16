@@ -55,13 +55,11 @@ int bc_main(int argc, char** argv) {
 
 int main(int argc, char **argv)
 {
-
-	if (argc <= 1) {
-        fprintf(stderr, "%s transpose/concat/bc\n", argv[0]);
-    }
-	else if (strcmp(argv[1], "transpose") == 0) return transpose_main(argc - 1, argv + 1);
-    else if (strcmp(argv[1], "concat") == 0) return concat_main(argc - 1, argv + 1);
-    else if (strcmp(argv[1], "bc") == 0) return bc_main(argc - 1, argv + 1);
+    COMMAND_HANDLER ch;
+    ch.add_function("transpose", "transpose single fastq file, with fixed all-zero barcode file generated", transpose_main);
+    ch.add_function("concat", "randomly concat multiple transposed fastq file to one, with proper barcode file generated", concat_main);
+    ch.add_function("bc", "view barcode inside a transposed fastq file", bc_main);
+    ch.run(argc, argv);
 
 	return 0;
 }
