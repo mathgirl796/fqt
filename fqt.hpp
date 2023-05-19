@@ -36,7 +36,7 @@ static inline void fqt_transpose(const char *file_path, const char *output_dir, 
             gzputc(bout_seq[i], seq->seq.s[i]);
             gzputc(bout_qual[i], seq->qual.s[i]);
         }
-        if (read_num % one_GigaByte == 0)
+        if (read_num % 100000 == 0)
         {
             fprintf(stderr, "Processed %d reads, using %.2f sec.\n", read_num, (float)(clock() - t) / CLOCKS_PER_SEC);
         }

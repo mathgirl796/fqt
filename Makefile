@@ -1,2 +1,2 @@
 all:
-	gcc main.cpp utils.c -lz -lstdc++ -o fqt
+	gcc main.cpp utils.c -lz -lpthread -lstdc++ -o fqt 
